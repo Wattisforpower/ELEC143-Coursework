@@ -4,6 +4,15 @@
 
 using namespace uop_msb_200;
 
+/*
+    University of Plymouth Group Coursework
+    Group:
+    - Ethan Barrett
+    - Aamer Dib
+    - Guy Ludford
+*/
+
+
 //On board LEDs
 DigitalOut led1(LED1);
 DigitalOut led2(LED2);
@@ -19,9 +28,6 @@ LCD_16X2_DISPLAY disp;
 Buzzer buzz;
 
 //Traffic Lights
-DigitalOut traf1RedLED(TRAF_RED1_PIN,1);
-DigitalOut traf1YelLED(TRAF_YEL1_PIN);
-DigitalOut traf1GrnLED(TRAF_GRN1_PIN);
 DigitalInOut traf2RedLED(TRAF_RED2_PIN, PIN_OUTPUT, OpenDrainNoPull, 0);
 DigitalInOut traf2YelLED(TRAF_YEL2_PIN, PIN_OUTPUT, OpenDrainNoPull, 1);
 DigitalInOut traf2GrnLED(TRAF_GRN2_PIN, PIN_OUTPUT, OpenDrainNoPull, 1);
@@ -34,6 +40,9 @@ EnvironmentalSensor sensor;
 
 //LCD Backlight - consider PwmOut for this :)
 DigitalOut backLight(LCD_BKL_PIN);
+
+// External Functions
+extern void temperature_function(float temperature_sensor);
 
 int main()
 {
@@ -49,13 +58,13 @@ int main()
         led2 = 0;
         led3 = 0;  
         wait_us(500000);    
-
         disp.cls();
         disp.printf("LDR: %0.3f", ldr.read());
-
         float temperature, pressure;
-        temperature=sensor.getTemperature();
-        pressure=sensor.getPressure();
+        temperature = sensor.getTemperature();
+        pressure = sensor.getPressure();
+
+        temperature_function(temperature);
 
         printf("%.1fC %.1fmBar\n",temperature,pressure);     
     }
