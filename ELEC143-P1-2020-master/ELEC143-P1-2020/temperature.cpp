@@ -59,8 +59,8 @@ void temperature_function(float temperature_sensor){
     float temperature_values[10]; // Takes in the rolling average
     float Av_Temperature; // Average Temperature
     int Temp_Index;
-    float Sum_Temperature;
-    short Category_Value;
+    float Sum_Temperature; // Takes the result of the Sum_of_Temperature Function
+    static short Category_Value; // Takes the value of the Category is used to detect when it is changed
 
     memset(temperature_values, 0, size_t(10)); // Sets all elements of the temperature_values array to 0
 
@@ -104,5 +104,5 @@ void temperature_function(float temperature_sensor){
     
     Is_Category_Change(Category_Value);
 
-    printf("Category: %d, Average Temp: %.1f | ", Category_Value, Av_Temperature);
+    printf("Category: %d, Average Temp: %.1f | ", Category_Value, Av_Temperature); // Displays the Category Value and Average Temperature
 }
