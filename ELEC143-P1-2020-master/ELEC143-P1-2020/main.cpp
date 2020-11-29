@@ -42,7 +42,7 @@ EnvironmentalSensor sensor;
 DigitalOut backLight(LCD_BKL_PIN);
 
 // External Functions
-extern void temperature_function(float temperature_sensor);
+extern void run_temperature_function();
 
 int main()
 {
@@ -60,13 +60,12 @@ int main()
         wait_us(500000);    
         disp.cls();
         disp.printf("LDR: %0.3f", ldr.read());
-        float temperature, pressure;
-        temperature = sensor.getTemperature();
+        float pressure;
         pressure = sensor.getPressure();
 
-        temperature_function(temperature);
+        run_temperature_function();
 
-        printf("%.1fC %.1fmBar\n",temperature,pressure);     
+        printf("%.1fmBar\n",pressure);     
     }
 }
 

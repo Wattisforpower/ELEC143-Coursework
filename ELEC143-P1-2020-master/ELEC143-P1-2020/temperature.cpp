@@ -3,6 +3,7 @@
 #include "BMP280_SPI.h"
 #include <cstring>
 
+
 using namespace uop_msb_200;
 
 // Using the External Buzzer
@@ -14,6 +15,8 @@ static DigitalOut traf1RedLED(TRAF_RED1_PIN,1);
 static DigitalOut traf1YelLED(TRAF_YEL1_PIN);
 static DigitalOut traf1GrnLED(TRAF_GRN1_PIN);
 
+//Environmental sensor
+extern EnvironmentalSensor sensor;
 
 
 // This file only function which works out the sum of the array
@@ -34,20 +37,43 @@ static void Is_Category_Change(int Cat){
     static int old_value;
     if (Cat > 0){
         if (Cat != old_value){
-            printf("A Category Change is occuring \n");
+            printf("A Category Change is occurring \n");
         }
     }
     old_value = Cat;
 
 }
 
+// This file only Function which will calculate the Average Temperature Value
+static float Average_Temperature(){
+    
+    float Av_Temperature; // Average Temperature
+    float temperature_values[10]; // Takes in the rolling average
+    int Temp_Index;
+    float Sum_Temperature; // Takes the result of the Sum_of_Temperature Function
+    float temperature;
+    temperature = sensor.getTemperature();
+
+    memset(temperature_values, 0, size_t(10)); // Sets all elements of the temperature_values array to 0
+
+    for (Temp_Index = 0; Temp_Index < 10; Temp_Index++){
+        temperature_values[Temp_Index] = temperature;
+    }
+
+    Sum_Temperature = Sum_of_Temperature(temperature_values);
+
+    Av_Temperature = Sum_Temperature / 10;
+
+    return Av_Temperature;
+}
+
 
 /*
- Main function in this file which changes which lights are turned on at different temperatures and
+ Main file only function in this file which changes which lights are turned on at different temperatures and
  will turn on the buzzer when it goes below freezing, Hysteresis has also been used as shown in the
  comment section int the main function below
 */
-void temperature_function(float temperature_sensor){
+static void temperature_function(float Average_Temperature_Value){
     
     /*
         Ranges:      | With Hysteresis:
@@ -56,23 +82,9 @@ void temperature_function(float temperature_sensor){
         20 < x < 40  | 21 < x < 39
         40 < x       | 41 < x
     */
-    float temperature_values[10]; // Takes in the rolling average
-    float Av_Temperature; // Average Temperature
-    int Temp_Index;
-    float Sum_Temperature; // Takes the result of the Sum_of_Temperature Function
     static short Category_Value; // Takes the value of the Category is used to detect when it is changed
 
-    memset(temperature_values, 0, size_t(10)); // Sets all elements of the temperature_values array to 0
-
-    for (Temp_Index = 0; Temp_Index < 10; Temp_Index++){
-        temperature_values[Temp_Index] = temperature_sensor;
-    }
-
-    Sum_Temperature = Sum_of_Temperature(temperature_values);
-
-    Av_Temperature = Sum_Temperature / 10;
-
-    if (Av_Temperature < -1 ){
+    if (Average_Temperature_Value < -1 ){
         Category_Value = 1;
         buzz.playTone("A", Buzzer::MIDDLE_OCTAVE);
         traf1RedLED = 1;
@@ -83,19 +95,19 @@ void temperature_function(float temperature_sensor){
         traf1RedLED = 0;
         wait_us(1000000);
     }
-    else if ((1 < Av_Temperature) && (Av_Temperature < 19)){
+    else if ((1 < Average_Temperature_Value) && (Average_Temperature_Value < 19)){
         Category_Value = 2;
         traf1RedLED = 1;
         traf1YelLED = 0;
         traf1GrnLED = 0;
     }
-    else if ((21 < Av_Temperature) && (Av_Temperature < 39)){
+    else if ((21 < Average_Temperature_Value) && (Average_Temperature_Value < 39)){
         Category_Value = 3;
         traf1RedLED = 0;
         traf1YelLED = 1;
         traf1GrnLED = 0;
     }
-    else if (41 < Av_Temperature){
+    else if (41 < Average_Temperature_Value){
         Category_Value = 4;
         traf1RedLED = 0;
         traf1YelLED = 0;
@@ -104,5 +116,27 @@ void temperature_function(float temperature_sensor){
     
     Is_Category_Change(Category_Value);
 
-    printf("Category: %d, Average Temp: %.1f | ", Category_Value, Av_Temperature); // Displays the Category Value and Average Temperature
+    printf("Category: %d, Average Temp: %.2f | ", Category_Value, Average_Temperature_Value); // Displays the Category Value and Average Temperature
+}
+
+
+
+// This function is the Main function which interacts with the main.cpp file, it will only run the temperature function when there is a change
+// detected by the sensor and then display it, if no change is detected then it will put the cpu into a low power mode for 1 second, using the
+// wait function, this also stops the Serial bus from being overloaded with information which is unnessesary.
+void run_temperature_function(){
+    static float Old_Temperature;
+    float Av_Temperature;
+
+    Av_Temperature = Average_Temperature();
+
+    if (Av_Temperature != Old_Temperature){
+        temperature_function(Av_Temperature);
+    }
+    else{
+        wait_us(1000000); // puts the cpu on hold for 1 second
+    }
+
+    Old_Temperature = Av_Temperature;
+
 }
