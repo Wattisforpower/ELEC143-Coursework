@@ -71,7 +71,7 @@ static float Average_Temperature(){
 /*
  Main file only function in this file which changes which lights are turned on at different temperatures and
  will turn on the buzzer when it goes below freezing, Hysteresis has also been used as shown in the
- comment section int the main function below
+ comment section in the main function below
 */
 static void temperature_function(float Average_Temperature_Value){
     
