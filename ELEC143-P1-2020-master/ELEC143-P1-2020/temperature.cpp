@@ -15,11 +15,11 @@ static DigitalOut traf1RedLED(TRAF_RED1_PIN,1);
 static DigitalOut traf1YelLED(TRAF_YEL1_PIN);
 static DigitalOut traf1GrnLED(TRAF_GRN1_PIN);
 
-//Environmental sensor
+// Using the External Environmental sensor
 extern EnvironmentalSensor sensor;
 
 
-// This file only function which works out the sum of the array
+// This File only Function which works out the sum of the array and returns it;
 static float Sum_of_Temperature(float *array){
     float Sum_of_Temperature_Array = 0;
     int Sum_Index;
@@ -44,7 +44,7 @@ static void Is_Category_Change(int Cat){
 
 }
 
-// This file only Function which will calculate the Average Temperature Value
+// This file only Function which will calculate the Average Temperature Value and return it;
 static float Average_Temperature(){
     
     float Av_Temperature; // Average Temperature
