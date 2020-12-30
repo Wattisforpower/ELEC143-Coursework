@@ -23,6 +23,7 @@ DigitalIn BlueButton(USER_BUTTON);
 
 //LCD Display
 LCD_16X2_DISPLAY disp;
+PwmOut backLight(LCD_BKL_PIN);
 
 //Buzzer
 Buzzer buzz;
@@ -43,12 +44,15 @@ EnvironmentalSensor sensor;
 // External Functions
 extern void run_temperature_function();
 extern void LDRfunction();
+extern void LCDbrightctrll();
+
 int main()
 {   
-    //LCD Backlight ON
     
 
     while (true) {
+        //backLight = 1;
+
         led1 = 1;
         led2 = 1;
         led3 = 1;
@@ -57,12 +61,16 @@ int main()
         led2 = 0;
         led3 = 0;  
         wait_us(500000);    
-        disp.cls();
+        //disp.cls();
         float pressure;
         pressure = sensor.getPressure();
 
         run_temperature_function();
         LDRfunction();
+
+        LCDbrightctrll();
+
+
 
         printf("%.1fmBar\n",pressure);     
     }
