@@ -52,11 +52,11 @@ static float Average_Temperature(){
     int Temp_Index;
     float Sum_Temperature; // Takes the result of the Sum_of_Temperature Function
     float temperature;
-    temperature = sensor.getTemperature();
 
     memset(temperature_values, 0, size_t(10)); // Sets all elements of the temperature_values array to 0
 
     for (Temp_Index = 0; Temp_Index < 10; Temp_Index++){
+        temperature = sensor.getTemperature();
         temperature_values[Temp_Index] = temperature;
     }
 

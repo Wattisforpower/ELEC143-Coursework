@@ -32,22 +32,21 @@ DigitalInOut traf2RedLED(TRAF_RED2_PIN, PIN_OUTPUT, OpenDrainNoPull, 0);
 DigitalInOut traf2YelLED(TRAF_YEL2_PIN, PIN_OUTPUT, OpenDrainNoPull, 1);
 DigitalInOut traf2GrnLED(TRAF_GRN2_PIN, PIN_OUTPUT, OpenDrainNoPull, 1);
 
-//Light Levels
+
 
 
 //Environmental sensor
 EnvironmentalSensor sensor;
 
-//LCD Backlight - consider PwmOut for this :)
-DigitalOut backLight(LCD_BKL_PIN);
+
 
 // External Functions
 extern void run_temperature_function();
-extern int second();
+extern void LDRfunction();
 int main()
 {   
     //LCD Backlight ON
-    backLight = 1;
+    
 
     while (true) {
         led1 = 1;
@@ -63,7 +62,7 @@ int main()
         pressure = sensor.getPressure();
 
         run_temperature_function();
-        second();
+        LDRfunction();
 
         printf("%.1fmBar\n",pressure);     
     }
