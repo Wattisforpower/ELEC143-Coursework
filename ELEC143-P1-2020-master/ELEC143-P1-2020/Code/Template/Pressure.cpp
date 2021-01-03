@@ -3,16 +3,16 @@
 
 using namespace uop_msb_200;
 
-LCD_16X2_DISPLAY lcd;
+LCD_16X2_DISPLAY display;
 
 extern EnvironmentalSensor sensor;
 
-float pressure;
+// float pressure;
 int front = 0;
 
 void pressurefallcheck(float pressure){
     int dataset = 50;
-    float pressurevalues [dataset];
+    float pressurevalues[dataset];
     pressurevalues[front] = pressure;
     front = (front + 1) % sizeof(pressurevalues);
 
@@ -26,15 +26,17 @@ void pressurefallcheck(float pressure){
         sumx = sumx + pressurevalues[index];
         sumy = sumy + index;
         sumxy = sumxy + pressurevalues[index] * index;
-        sumxx = sumxx + pow(pressurevalues[index], 2);
+        sumxx = sumxx + ((pressurevalues[index]) * (pressurevalues[index])) ;
     }
 
     float average  = (dataset * sumxy - (sumx)*(sumy)) / (dataset * sumxx - (sumx) * (sumx));
+    /*
     if (average < -1){
-        lcd.locate(1, 0);
-        lcd.printf("Rapid Pressure Fall Detected");
+        display.locate(1, 0);
+        display.printf("Rapid Pressure Fall Detected");
     }
-
+    */
+    
     //printf("average = %.1fmBar\n", average);
 }
 
@@ -44,10 +46,10 @@ void pressurefunction(){
     int front = 0;
     
     while (true){
-        lcd.cls();
+        display.cls();
         pressure  = sensor.getPressure();
-        lcd.locate(0,0);
-        lcd.printf("pressure = %.1fmBar\n", pressure);
+        display.locate(0,0);
+        display.printf("pressure = %.1fmBar\n", pressure);
         pressurefallcheck(pressure);
 
     }

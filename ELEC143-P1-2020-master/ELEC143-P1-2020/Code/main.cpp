@@ -69,7 +69,7 @@ int main()
         pressurefunction();
 
         LCDbrightctrll();
-     
+
     }
 }
 
