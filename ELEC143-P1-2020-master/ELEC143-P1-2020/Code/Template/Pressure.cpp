@@ -29,11 +29,13 @@ void pressurefallcheck(float pressure){
         sumxx = sumxx + (pressurevalues[index] * pressurevalues[index]);
     }
 
+    /*
     float average  = (dataset * sumxy - (sumx)*(sumy)) / (dataset * sumxx - (sumx) * (sumx));
     if (average < -1){
         disp.locate(1, 0);
         disp.printf("Rapid Pressure Fall Detected");
     }
+    */
 
     //printf("average = %.1fmBar\n", average);
 }

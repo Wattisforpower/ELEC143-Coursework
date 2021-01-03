@@ -21,8 +21,7 @@ DigitalOut led3(LED3);
 //On board switch
 DigitalIn BlueButton(USER_BUTTON);
 
-//LCD Display
-LCD_16X2_DISPLAY disp;
+
 PwmOut backLight(LCD_BKL_PIN);
 
 //Buzzer
