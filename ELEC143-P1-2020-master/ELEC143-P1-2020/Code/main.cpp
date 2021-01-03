@@ -45,6 +45,7 @@ EnvironmentalSensor sensor;
 extern void run_temperature_function();
 extern void LDRfunction();
 extern void LCDbrightctrll();
+extern void pressurefunction();
 
 int main()
 {   
@@ -62,17 +63,13 @@ int main()
         led3 = 0;  
         wait_us(500000);    
         //disp.cls();
-        float pressure;
-        pressure = sensor.getPressure();
 
         run_temperature_function();
         LDRfunction();
+        pressurefunction();
 
         LCDbrightctrll();
-
-
-
-        printf("%.1fmBar\n",pressure);     
+     
     }
 }
 

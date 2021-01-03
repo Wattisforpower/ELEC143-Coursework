@@ -33,9 +33,6 @@ void ReadAvgLDR()
 
 void LCDbrightctrll()
 {   
-    //Update display
-    dis.locate(1, 0);
-    dis.printf("Turn the POT");
     dispBackLight.write(1.0 - meanLDR);
     dispBackLight.period(0.020f);
 }
