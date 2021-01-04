@@ -44,14 +44,11 @@ void pressurefallcheck(float pressure){
 void pressurefunction(){
     float pressure;
     int front = 0;
-    
-    while (true){
-        disp.cls();
-        pressure  = sensor.getPressure();
-        disp.locate(0,0);
-        disp.printf("pressure = %.1fmBar\n", pressure);
-        pressurefallcheck(pressure);
 
-    }
+    disp.cls();
+    pressure  = sensor.getPressure();
+    disp.locate(0,0);
+    disp.printf("pressure = %.1fmBar\n", pressure);
+    pressurefallcheck(pressure);
 
 } 
