@@ -12,43 +12,62 @@ int front = 0;
 
 void pressurefallcheck(float pressure){
     int dataset = 50;
-    float pressurevalues [dataset];
-    pressurevalues[front] = pressure;
-    front = (front + 1) % sizeof(pressurevalues);
+    float pressurevalues[dataset];
+
+    for (int n = 0; n < dataset; n++){
+        pressure  = sensor.getPressure();
+        pressurevalues[n] = pressure;
+        //printf("Pressurevalue = %f", pressurevalues[n]);
+    }
 
     int i = 0;
-    int sumx = 0;
-    int sumy = 0 ;
-    int sumxy = 0;
-    int sumxx = 0;
+    long sumx = 0;
+    long sumy = 0 ;
+    long sumxy = 0;
+    long sumxx = 0;
+    /*
     for(i = 0; i < dataset; i++){
         int index = (front + i) % sizeof(pressurevalues);
         sumx = sumx + pressurevalues[index];
         sumy = sumy + index;
         sumxy = sumxy + pressurevalues[index] * index;
         sumxx = sumxx + (pressurevalues[index] * pressurevalues[index]);
+    }*/
+
+    for(i = 0; i < dataset; i++){
+        //int index = (front + i) % sizeof(pressurevalues);
+        sumx = sumx + int(pressurevalues[i]);
+        //printf("sumx = %ld\n", sumx);
+        //printf("pressurevalues = %f\n", pressurevalues[i]);
+        sumy = sumy + (i+1);
+        sumxy = sumxy + pressurevalues[i] * i;
+        sumxx = sumxx + (pressurevalues[i] * pressurevalues[i]);
     }
 
-    /*
-    float average  = (dataset * sumxy - (sumx)*(sumy)) / (dataset * sumxx - (sumx) * (sumx));
-    if (average < -1){
+    
+    double gradient  = (dataset * sumxy - (sumx)*(sumy)) / (dataset * sumxx - (sumx) * (sumx));
+
+
+    if (gradient < 0){
         disp.locate(1, 0);
-        disp.printf("Rapid Pressure Fall Detected");
+        disp.printf("Rapid Pressure Fall Detected \n");
     }
-    */
-
-    //printf("average = %.1fmBar\n", average);
+    
+    printf("sumx = %ld\n", sumx);
+    printf("sumy = %ld\n", sumy);
+    printf("gradient = %f\n", gradient);
 }
 
 
 void pressurefunction(){
-    float pressure;
-    int front = 0;
-
+    //float pressure;
+    //int front = 0;
     disp.cls();
-    pressure  = sensor.getPressure();
     disp.locate(0,0);
-    disp.printf("pressure = %.1fmBar\n", pressure);
+    disp.printf("%.1fmBar\n", pressure);
+    wait_us(500000);
     pressurefallcheck(pressure);
+
+    
 
 } 
