@@ -51,7 +51,7 @@ int main()
     
 
     while (true) {
-        //backLight = 1;
+        
 
         led1 = 1;
         led2 = 1;
