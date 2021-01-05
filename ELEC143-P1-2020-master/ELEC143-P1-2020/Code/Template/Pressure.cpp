@@ -14,10 +14,11 @@ void pressurefallcheck(float pressure){
     int dataset = 50;
     float pressurevalues[dataset];
 
+    //creating a list of pressurevalues to 'graph' and find gradient
+
     for (int n = 0; n < dataset; n++){
         pressure  = sensor.getPressure();
         pressurevalues[n] = pressure;
-        //printf("Pressurevalue = %f", pressurevalues[n]);
     }
 
     int i = 0;
@@ -25,49 +26,33 @@ void pressurefallcheck(float pressure){
     long sumy = 0 ;
     long sumxy = 0;
     long sumxx = 0;
-    /*
-    for(i = 0; i < dataset; i++){
-        int index = (front + i) % sizeof(pressurevalues);
-        sumx = sumx + pressurevalues[index];
-        sumy = sumy + index;
-        sumxy = sumxy + pressurevalues[index] * index;
-        sumxx = sumxx + (pressurevalues[index] * pressurevalues[index]);
-    }*/
+
+    //setting up variables for a regression model
 
     for(i = 0; i < dataset; i++){
-        //int index = (front + i) % sizeof(pressurevalues);
         sumx = sumx + int(pressurevalues[i]);
-        //printf("sumx = %ld\n", sumx);
-        //printf("pressurevalues = %f\n", pressurevalues[i]);
         sumy = sumy + (i+1);
         sumxy = sumxy + pressurevalues[i] * i;
         sumxx = sumxx + (pressurevalues[i] * pressurevalues[i]);
     }
 
-    
+    //calculating a regression gradient
+
     double gradient  = (dataset * sumxy - (sumx)*(sumy)) / (dataset * sumxx - (sumx) * (sumx));
 
+    //if the gradient is negative pressure is falling, outputs this to the lcd
 
     if (gradient < 0){
-        disp.locate(1, 0);
         disp.printf("Rapid Pressure Fall Detected \n");
     }
-    
-    printf("sumx = %ld\n", sumx);
-    printf("sumy = %ld\n", sumy);
-    printf("gradient = %f\n", gradient);
 }
 
 
 void pressurefunction(){
-    //float pressure;
-    //int front = 0;
-    disp.cls();
+    disp.cls();     //clears screen
+    pressure  = sensor.getPressure();
     disp.locate(0,0);
-    disp.printf("%.1fmBar\n", pressure);
-    wait_us(500000);
+    disp.printf("%.1fmBar\n", pressure); //displays presure value on lcd
     pressurefallcheck(pressure);
-
-    
-
+    wait_us(500000);
 } 
