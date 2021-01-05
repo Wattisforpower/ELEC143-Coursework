@@ -12,10 +12,13 @@ int front = 0;
 
 void pressurefallcheck(float pressure){
     int dataset = 50;
-    float pressurevalues [dataset];
-    pressurevalues[front] = pressure;
-    printf("Pressurevalue = %f", pressurevalues[front]);
-    front = (front + 1); // sizeof(pressurevalues);
+    float pressurevalues[dataset];
+
+    for (int n = 0; n < dataset; n++){
+        pressure  = sensor.getPressure();
+        pressurevalues[n] = pressure;
+        //printf("Pressurevalue = %f", pressurevalues[n]);
+    }
 
     int i = 0;
     long sumx = 0;
@@ -42,11 +45,12 @@ void pressurefallcheck(float pressure){
     }
 
     
-    float gradient  = (dataset * sumxy - (sumx)*(sumy)) / (dataset * sumxx - (sumx) * (sumx));
-    
+    double gradient  = (dataset * sumxy - (sumx)*(sumy)) / (dataset * sumxx - (sumx) * (sumx));
+
+
     if (gradient < 0){
         disp.locate(1, 0);
-        disp.printf("Rapid Pressure Fall Detected");
+        disp.printf("Rapid Pressure Fall Detected \n");
     }
     
     printf("sumx = %ld\n", sumx);
@@ -59,7 +63,6 @@ void pressurefunction(){
     //float pressure;
     //int front = 0;
     disp.cls();
-    pressure  = sensor.getPressure();
     disp.locate(0,0);
     disp.printf("%.1fmBar\n", pressure);
     wait_us(500000);
