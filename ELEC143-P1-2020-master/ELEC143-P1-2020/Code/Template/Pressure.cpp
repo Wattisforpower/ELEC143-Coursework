@@ -31,12 +31,12 @@ void pressurefallcheck(float pressure){
         sumxx = sumxx + (pressurevalues[index] * pressurevalues[index]);
     }*/
 
-    for(i = 0; i <= dataset; i++){
+    for(i = 0; i < dataset; i++){
         //int index = (front + i) % sizeof(pressurevalues);
         sumx = sumx + int(pressurevalues[i]);
         //printf("sumx = %ld\n", sumx);
         //printf("pressurevalues = %f\n", pressurevalues[i]);
-        sumy = sumy + i;
+        sumy = sumy + (i+1);
         sumxy = sumxy + pressurevalues[i] * i;
         sumxx = sumxx + (pressurevalues[i] * pressurevalues[i]);
     }
