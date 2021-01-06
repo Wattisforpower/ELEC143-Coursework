@@ -35,7 +35,7 @@ void ReadAvgLDR()
 
 void LCDbrightctrll()
 {   
-    //display Backlight changes
+    //display's Backlight changes
     dispBackLight.write(1.0 - meanLDR);
     dispBackLight.period(0.020f);
 }
@@ -52,7 +52,7 @@ void LCDbrightctrll()
 
 void LDRfunction()
 {
-    //displays the LDR to the serial port
+    //displays the LDR Value to the serial port
     ReadAvgLDR();
     
     printf("\n*****************************************");
