@@ -54,7 +54,7 @@ void LDRfunction()
 {
     //displays the LDR to the serial port
     ReadAvgLDR();
-    printf("LDR Average  %f\n",meanLDR);
+    
     printf("\n*****************************************");
     printf("\nLight Feedback: ");
     
