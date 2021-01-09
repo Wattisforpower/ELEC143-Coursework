@@ -10,9 +10,11 @@ extern EnvironmentalSensor sensor;
 float pressure;
 int front = 0;
 
-void pressurefallcheck(float pressure){
-    int dataset = 50;
+float pressurefallcheck(){
+    int dataset = 10;
     float pressurevalues[dataset];
+    float total_pressure;
+    float average_pressure;
 
     //creating a list of pressurevalues to 'graph' and find gradient
 
@@ -21,38 +23,71 @@ void pressurefallcheck(float pressure){
         pressurevalues[n] = pressure;
     }
 
-    int i = 0;
+    for (int m = 0; m < dataset; m++){
+        total_pressure += pressurevalues[m];
+    }
+
+    average_pressure = total_pressure / dataset;
+
     long sumx = 0;
     long sumy = 0 ;
     long sumxy = 0;
     long sumxx = 0;
 
     //setting up variables for a regression model
-
-    for(i = 0; i < dataset; i++){
-        sumx = sumx + int(pressurevalues[i]);
+    /*
+    for(int i = 0; i < dataset; i++){
+        sumx = sumx + (pressurevalues[i]);
         sumy = sumy + (i+1);
-        sumxy = sumxy + pressurevalues[i] * i;
+        sumxy = sumxy + (pressurevalues[i] * (i));
         sumxx = sumxx + (pressurevalues[i] * pressurevalues[i]);
+    }
+    */
+
+    // Setting Up XX and YY.
+    float xx[dataset], yy[dataset];
+
+    for (int i = 0; i < dataset; i++){
+        xx[i] = (pressurevalues[i] * pressurevalues[i]);
+        yy[i] = i * i;
+    }
+
+    for (int i = 0; i< dataset; i++){
+        sumx += pressurevalues[i];
+        sumy += i;
+        sumxx += xx[i];
+        sumxy += pressurevalues[i] * i;
     }
 
     //calculating a regression gradient
 
-    double gradient  = (dataset * sumxy - (sumx)*(sumy)) / (dataset * sumxx - (sumx) * (sumx));
+    float nr, dr;
+
+    nr = (dataset * sumxy) - (sumx * sumy);
+    dr = (dataset * sumxx) - (sumx * sumx);
+
+    double gradient = nr / dr;
+
+    /*
+    double gradient  = (((dataset) * (sumxy)) - ((sumx)*(sumy))) / (((dataset) * (sumxx)) - ((sumx) * (sumx)));
+    */
 
     //if the gradient is negative pressure is falling, outputs this to the lcd
 
     if (gradient < 0){
         disp.printf("Rapid Pressure Fall Detected \n");
     }
+    printf("%f \n", gradient);
+
+    return average_pressure;
 }
 
 
 void pressurefunction(){
+    float pressure;
     disp.cls();     //clears screen
-    pressure  = sensor.getPressure();
+    pressure = pressurefallcheck();
     disp.locate(0,0);
     disp.printf("%.1fmBar\n", pressure); //displays presure value on lcd
-    pressurefallcheck(pressure);
     wait_us(500000);
 } 
