@@ -61,7 +61,7 @@ float pressurefallcheck(){
 
     //calculating a regression gradient
 
-    float nr, dr;
+    float nr = 0, dr = 0;
 
     nr = (dataset * sumxy) - (sumx * sumy);
     dr = (dataset * sumxx) - (sumx * sumx);
@@ -77,7 +77,8 @@ float pressurefallcheck(){
     if (gradient < 0){
         disp.printf("Rapid Pressure Fall Detected \n");
     }
-    printf("%f \n", gradient);
+
+    printf("%f", gradient);
 
     return average_pressure;
 }
